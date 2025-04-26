@@ -26,7 +26,11 @@ jobs:
       - name: Set up dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip curl awscli jq
+          sudo apt-get install -y unzip curl jq
+          curl -L "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          rm -rf awscliv2.zip aws
 
       - name: Download OpenShift Installer
         run: |
