@@ -49,6 +49,13 @@ jobs:
           aws configure set default.region us-east-1
 
       - name: Create OpenShift Cluster
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
+          CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          PULL_SECRET: ${{ secrets.PULL_SECRET }}
         run: |
           mkdir -p ./ocp-install
           envsubst < install-config.yaml.template > install-config.yaml
