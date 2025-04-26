@@ -29,5 +29,5 @@ platform:
   aws:
     region: $AWS_REGION
 publish: External
-pullSecret: $PULL_SECRET
-sshKey: $SSH_KEY
+pullSecret: '$PULL_SECRET'
+sshKey: '$SSH_KEY'
