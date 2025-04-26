@@ -51,5 +51,6 @@ jobs:
       - name: Create OpenShift Cluster
         run: |
           mkdir -p ./ocp-install
+          envsubst < install-config.yaml.template > install-config.yaml
           cp install-config.yaml ./ocp-install/
           openshift-install create cluster --dir=./ocp-install --log-level=info

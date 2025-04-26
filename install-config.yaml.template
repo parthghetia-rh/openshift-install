@@ -1,6 +1,6 @@
 additionalTrustBundlePolicy: Proxyonly
 apiVersion: v1
-baseDomain: sandbox1171.opentlc.com
+baseDomain: $BASE_DOMAIN
 compute:
 - architecture: amd64
   hyperthreading: Enabled
