@@ -1,0 +1,50 @@
+name: Deploy Openshift on AWS
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  AWS_REGION: us-east-2
+  OCP_VERSION: 4.18.9
+  CLUSTER_NAME: parth-aws-self
+  BASE_DOMAIN: sandbox1171.opentlc.com
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  PULL_SECRET: ${{ secrets.PULL_SECRET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  
+jobs:
+  openshift-install:
+    name: Install OpenShift
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl awscli jq
+
+      - name: Download OpenShift Installer
+        run: |
+          curl -L -o openshift-install-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OCP_VERSION}/openshift-install-linux-${OCP_VERSION}.tar.gz
+          tar -xvzf openshift-install-linux.tar.gz
+          sudo mv openshift-install /usr/local/bin/
+
+      - name: Set up AWS Credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region us-east-1
+
+      - name: Create OpenShift Cluster
+        run: |
+          mkdir -p ./ocp-install
+          cp install-config.yaml ./ocp-install/
+          openshift-install create cluster --dir=./ocp-install --log-level=info
