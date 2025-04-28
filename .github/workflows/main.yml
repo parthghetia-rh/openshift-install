@@ -65,7 +65,7 @@ jobs:
           openshift-install create cluster --dir=./ocp-install --log-level=info
     
       - name: Upload manifests as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ocp-install-folder
           path: ./ocp-install
