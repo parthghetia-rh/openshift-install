@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-aws-final
+  CLUSTER_NAME: parth-aws-run
   BASE_DOMAIN: sandbox1171.opentlc.com
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
@@ -32,6 +32,8 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install
           rm -rf awscliv2.zip aws
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          sudo mv kustomize /usr/local/bin/kustomize
 
       - name: Download OpenShift Installer
         run: |
@@ -60,4 +62,18 @@ jobs:
           mkdir -p ./ocp-install
           envsubst < install-config.yaml.template > install-config.yaml
           cp install-config.yaml ./ocp-install/
-          openshift-install create cluster --dir=./ocp-install --log-level=debug
+          openshift-install create cluster --dir=./ocp-install --log-level=info
+    
+      - name: Upload manifests as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ocp-install-folder
+          path: ./ocp-install
+          
+      - name: Apply ACM Policies
+        run: |
+          cd acm-policies
+          export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
+          oc whoami --show-console
+          oc get nodes
+          kustomize build --enable-alpha-plugins | oc apply -f -

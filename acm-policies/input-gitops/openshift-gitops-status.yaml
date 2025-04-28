@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openshift-gitops-server
+  namespace: openshift-gitops
+status:
+  conditions:
+    - status: "True"
+      type: Available
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openshift-gitops-repo-server
+  namespace: openshift-gitops
+status:
+  conditions:
+    - status: "True"
+      type: Available
