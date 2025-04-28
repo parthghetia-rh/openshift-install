@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-playground
+  CLUSTER_NAME: parth-aws-self
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
@@ -35,11 +35,16 @@ jobs:
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
           sudo mv kustomize /usr/local/bin/kustomize
 
-      - name: Download OpenShift Installer
+      - name: Download OpenShift Installer and CLI
         run: |
           curl -L -o openshift-install-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OCP_VERSION}/openshift-install-linux-${OCP_VERSION}.tar.gz
           tar -xvzf openshift-install-linux.tar.gz
           sudo mv openshift-install /usr/local/bin/
+
+          # Download and install oc CLI
+          curl -L -o openshift-client-linux.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OCP_VERSION}/openshift-client-linux-${OCP_VERSION}.tar.gz
+          tar -xvzf openshift-client-linux.tar.gz
+          sudo mv oc kubectl /usr/local/bin/
 
       - name: Set up AWS Credentials
         env:
@@ -69,6 +74,13 @@ jobs:
         with:
           name: ocp-install-folder
           path: ./ocp-install
+          retention-days: 5
+      
+      - name: Install Policy Generator plugin
+        run: |
+          mkdir -p ~/.config/kustomize/plugin/open-cluster-management.io/PolicyGenerator
+          curl -L https://github.com/stolostron/policy-generator-plugin/releases/latest/download/policygenerator-plugin-linux-amd64 -o ~/.config/kustomize/plugin/open-cluster-management.io/PolicyGenerator/PolicyGenerator
+          chmod +x ~/.config/kustomize/plugin/open-cluster-management.io/PolicyGenerator/PolicyGenerator
           
       - name: Apply ACM Policies
         run: |
