@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-aws-run
+  CLUSTER_NAME: parth-playground
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
@@ -74,6 +74,4 @@ jobs:
         run: |
           cd acm-policies
           export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
-          oc whoami --show-console
-          oc get nodes
           kustomize build --enable-alpha-plugins | oc apply -f -
