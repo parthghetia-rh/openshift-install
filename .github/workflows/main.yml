@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-aws-self
+  CLUSTER_NAME: parth-playground
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
@@ -82,9 +82,6 @@ jobs:
         run: |
           export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
 
-          echo "Checking if logged in to the cluster..."
-          oc get nodes
-
           echo "Installing RHACM Operator..."
           oc apply -f ./acm-install/acm-install.yaml
 
@@ -96,7 +93,7 @@ jobs:
           oc apply -f ./acm-install/multiclusterhub.yaml
           sleep 120
 
-          echo "Installing Hub Admin Policies...
+          echo "Installing Hub Admin Policies..."
           oc apply -f ./acm-install/pre-acm-policies.yaml
           sleep 60
 
