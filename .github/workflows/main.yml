@@ -76,6 +76,27 @@ jobs:
           path: ./ocp-install
           retention-days: 5
       
+      #post-install steps
+
+      - name: Install RHACM Operator
+        run: |
+          export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
+
+          echo "Checking if logged in to the cluster..."
+          oc get nodes
+
+          echo "Installing RHACM Operator..."
+          oc apply -f ./acm-install/acm-install.yaml
+
+          echo "Waiting for RHACM operator to be installed..."
+          sleep 60
+          oc get csv -n open-cluster-management
+
+          echo "Installing Hub Admin Policies...
+          oc apply -f ./acm-install/pre-acm-policies.yaml
+          sleep 60
+
+      
       - name: Install Policy Generator plugin
         run: |
           mkdir -p ~/.config/kustomize/plugin/open-cluster-management.io/PolicyGenerator
@@ -84,6 +105,6 @@ jobs:
           
       - name: Apply ACM Policies
         run: |
-          cd acm-policies
+          cd ./acm-policies
           export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
           kustomize build --enable-alpha-plugins | oc apply -f -
