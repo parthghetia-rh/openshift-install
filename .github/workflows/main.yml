@@ -92,6 +92,10 @@ jobs:
           sleep 60
           oc get csv -n open-cluster-management
 
+          echo "Install Multicluster Hub..."
+          oc apply -f ./acm-install/multiclusterhub.yaml
+          sleep 120
+
           echo "Installing Hub Admin Policies...
           oc apply -f ./acm-install/pre-acm-policies.yaml
           sleep 60
