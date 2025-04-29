@@ -101,9 +101,11 @@ jobs:
       - name: Install Policy Generator plugin
         run: |
           mkdir -p ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
-          curl -L https://github.com/stolostron/policy-generator-plugin/releases/latest/download/policygenerator-plugin-linux-amd64 -o ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
+          curl -L https://github.com/open-cluster-management-io/policy-generator-plugin/releases/download/v1.16.0/linux-amd64-PolicyGenerator -o ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
           chmod +x ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
-          
+          uname
+          uname -m
+          ls -l ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/      
       - name: Apply ACM Policies
         run: |
           cd ./acm-policies
