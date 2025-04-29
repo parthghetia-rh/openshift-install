@@ -91,7 +91,7 @@ jobs:
 
           echo "Install Multicluster Hub..."
           oc apply -f ./acm-install/multiclusterhub.yaml
-          sleep 120
+          sleep 180
 
           echo "Installing Hub Admin Policies..."
           oc apply -f ./acm-install/pre-acm-policies.yaml
@@ -105,7 +105,8 @@ jobs:
           chmod +x ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
           uname
           uname -m
-          ls -l ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/      
+          ls -l ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/   
+
       - name: Apply ACM Policies
         run: |
           cd ./acm-policies
