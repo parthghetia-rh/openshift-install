@@ -70,6 +70,7 @@ spec:
                     kind: User
                     name: system:admin
 ---
+apiVersion: cluster.open-cluster-management.io/v1beta2
 kind: ManagedClusterSetBinding
 metadata:
     name: default
