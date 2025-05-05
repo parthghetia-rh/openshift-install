@@ -97,6 +97,10 @@ jobs:
           oc apply -f ./acm-install/pre-acm-policies.yaml
           sleep 60
 
+          echo "Labelling all worker nodes with a storage label for ODF installation..."
+          oc get nodes -l node-role.kubernetes.io/worker --no-headers -o custom-columns=NAME:.metadata.name | xargs -I{} oc label node {} cluster.ocs.openshift.io/openshift-storage=''
+          
+
       
       - name: Install Policy Generator plugin
         run: |

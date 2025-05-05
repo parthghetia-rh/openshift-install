@@ -200,7 +200,7 @@ policies:
     - name: policy-quay-status
   manifests:
     - path: input-gitops/openshift-gitops-install.yaml
-  remediationAction: inform
+  remediationAction: enforce
 - name: policy-gitops-status
   categories:
     - SI System and Information Integrity
