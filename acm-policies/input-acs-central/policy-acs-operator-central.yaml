@@ -8,6 +8,24 @@ kind: Namespace
 metadata:
   name: rhacs-operator
 ---
+apiVersion: v1
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: declarative-configurations
+  namespace: stackrox
+data:
+  acs_ocp_auth.yaml: |
+    name: OpenShift
+    minimumRole: Admin 
+    uiEndpoint: "https://central.stackrox.svc:443"
+    groups: 
+        - key: groups
+          value: Admin
+          role: Admin
+    openshift:
+      enable: true
+---
 apiVersion: policy.open-cluster-management.io/v1beta1
 kind: OperatorPolicy
 metadata:
@@ -34,6 +52,9 @@ metadata:
   name: stackrox-central-services
 spec:
   central:
+    declarativeConfiguration:
+      configMaps:
+        - name: declarative-configurations
     exposure:
       loadBalancer:
         enabled: false
