@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-child-acs
+  CLUSTER_NAME: parth-acs-test
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
@@ -68,7 +68,7 @@ jobs:
           mkdir -p ./ocp-install
           envsubst < install-config.yaml.template > install-config.yaml
           cp install-config.yaml ./ocp-install/
-          openshift-install create cluster --dir=./ocp-install --log-level=info
+          openshift-install create cluster --dir=./ocp-install --log-level=debug
     
       - name: Upload manifests as artifact
         uses: actions/upload-artifact@v4
