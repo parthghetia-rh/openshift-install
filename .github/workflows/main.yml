@@ -7,12 +7,13 @@ on:
 env:
   AWS_REGION: us-east-2
   OCP_VERSION: 4.18.9
-  CLUSTER_NAME: parth-central
+  CLUSTER_NAME: parth-child-acs
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
   PULL_SECRET: ${{ secrets.PULL_SECRET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  ACM_HUB_DEPLOYER: false
   
 jobs:
   openshift-install:
@@ -79,6 +80,7 @@ jobs:
       #post-install steps
 
       - name: Install RHACM Operator
+        if: env.ACM_HUB_DEPLOYER == 'true'
         run: |
           export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
 
@@ -103,6 +105,7 @@ jobs:
 
       
       - name: Install Policy Generator plugin
+        if: env.ACM_HUB_DEPLOYER == 'true'
         run: |
           mkdir -p ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
           curl -L https://github.com/open-cluster-management-io/policy-generator-plugin/releases/download/v1.16.0/linux-amd64-PolicyGenerator -o ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator
@@ -112,6 +115,7 @@ jobs:
           ls -l ~/.config/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/   
 
       - name: Apply ACM Policies
+        if: env.ACM_HUB_DEPLOYER == 'true'
         run: |
           cd ./acm-policies
           export KUBECONFIG=$GITHUB_WORKSPACE/ocp-install/auth/kubeconfig
