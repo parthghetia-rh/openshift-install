@@ -68,7 +68,7 @@ jobs:
           mkdir -p ./ocp-install
           envsubst < install-config.yaml.template > install-config.yaml
           cp install-config.yaml ./ocp-install/
-          openshift-install create cluster --dir=./ocp-install --log-level=debug
+          openshift-install create cluster --dir=./ocp-install --log-level=info
     
       - name: Upload manifests as artifact
         uses: actions/upload-artifact@v4
