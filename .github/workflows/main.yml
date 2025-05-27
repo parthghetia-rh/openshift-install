@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: us-east-2
-  OCP_VERSION: 4.18.9
+  OCP_VERSION: 4.18.15
   CLUSTER_NAME: parth-playground
   BASE_DOMAIN: ${{ secrets.BASE_DOMAIN }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
@@ -88,7 +88,7 @@ jobs:
           oc apply -f ./acm-install/acm-install.yaml
 
           echo "Waiting for RHACM operator to be installed..."
-          sleep 60
+          sleep 180
           oc get csv -n open-cluster-management
 
           echo "Install Multicluster Hub..."
@@ -97,7 +97,6 @@ jobs:
 
           echo "Installing Hub Admin Policies..."
           oc apply -f ./acm-install/pre-acm-policies.yaml
-          sleep 60
 
           echo "Labelling all worker nodes with a storage label for ODF installation..."
           oc get nodes -l node-role.kubernetes.io/worker --no-headers -o custom-columns=NAME:.metadata.name | xargs -I{} oc label node {} cluster.ocs.openshift.io/openshift-storage=''
